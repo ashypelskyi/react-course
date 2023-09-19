@@ -1,0 +1,9 @@
+li.completed::marker {
+    content: '✅ ';
+    font-size: 1em;
+}
+
+li.in-progress::marker {
+    content: '⚪ ';
+    font-size: 1em;
+}
