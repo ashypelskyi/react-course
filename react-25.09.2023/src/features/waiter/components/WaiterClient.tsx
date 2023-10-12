@@ -19,4 +19,22 @@ export class WaiterClient {
         });
         return response.json();
     }
+
+    public async edit(waiter: Waiter): Promise<Waiter> {
+        const response = await fetch(`${this.url}/${waiter.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(waiter),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.json();
+    }
+
+    public async delete(waiterId: number): Promise<void> {
+        const response = await fetch(`${this.url}/${waiterId}`, {
+            method: 'DELETE'
+        });
+        return response.json();
+    }
 }
