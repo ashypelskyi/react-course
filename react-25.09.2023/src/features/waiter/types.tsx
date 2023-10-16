@@ -11,3 +11,6 @@ export interface WaitersBackendConfig {
 export interface WaitersPageConfig {
     backend: WaitersBackendConfig
 }
+
+
+export type WaiterSuccessOrError = Waiter | unknown | null;

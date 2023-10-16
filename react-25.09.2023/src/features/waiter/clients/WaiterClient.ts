@@ -1,40 +1,35 @@
 import {Waiter} from "../types";
+import HttpClient from "../../../clients/HttpClient";
 
-export class WaiterClient {
-    constructor(private readonly url: string) {
-    }
+export class WaiterClient extends HttpClient<number, Waiter> {
 
-    public async fetchAll(): Promise<Waiter[]> {
+    public fetchAll = async (): Promise<Waiter[]> => {
         const response = await fetch(this.url)
         return response.json();
-    }
+    };
 
-    public async create(waiter: Waiter): Promise<Waiter> {
+    public create = async (waiter: Waiter): Promise<Waiter> => {
         const response = await fetch(this.url, {
             method: 'POST',
             body: JSON.stringify(waiter),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: this.JSON_CONTENT_TYPE_HEADER
         });
         return response.json();
-    }
+    };
 
-    public async edit(waiter: Waiter): Promise<Waiter> {
+    public update = async (waiter: Waiter): Promise<Waiter> => {
         const response = await fetch(`${this.url}/${waiter.id}`, {
             method: 'PUT',
             body: JSON.stringify(waiter),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: this.JSON_CONTENT_TYPE_HEADER
         });
         return response.json();
-    }
+    };
 
-    public async delete(waiterId: number): Promise<void> {
+    public delete = async (waiterId: number): Promise<void> => {
         const response = await fetch(`${this.url}/${waiterId}`, {
             method: 'DELETE'
         });
         return response.json();
-    }
+    };
 }
