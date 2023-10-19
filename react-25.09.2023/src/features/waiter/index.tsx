@@ -1,57 +1,26 @@
 import React from "react";
 import WaiterList from './components/WaiterList';
-import {Waiter, WaitersPageConfig, WaiterSuccessOrError} from './types';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ButtonWithTooltip from "../../components/ButtonWithTooltip";
-import {PersonAdd} from "react-bootstrap-icons";
 import Notification from "../../components/notifiation";
-import useWaiters from "./hooks/useWaiters";
-import useNotification from "../../components/notifiation/hooks/useNotification";
+import {PersonAdd} from "react-bootstrap-icons";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../store";
+import {addWaiterAction, closeWaiterFormAction, hideNotification} from "./store/actions";
 import ModalDialog from "../../components/modal-dialog";
 import WaiterForm from "./components/WaiterForm";
-import useModalDialog from "../../components/modal-dialog/hooks/useModalDialog";
 
-interface WaitersPageProps {
-    config: WaitersPageConfig
-}
+const WaitersPage = () => {
+    const {displayWaiterForm, waiterFormTitle, notificationMessage, notificationType} = useSelector((state: RootState) => state.waiters);
+    const dispatch = useDispatch<AppDispatch>();
 
-const WaitersPage = ({config}: WaitersPageProps) => {
-    const {
-        waiters,
-        editableWaiter,
-        notificationMessage,
-        notificationType,
-        editWaiter,
-        deleteWaiter,
-        createWaiter,
-        setEditableWaiter
-    } = useWaiters(config);
-    const {display: displayNotification, show: showNotification, hide: hideNotification} = useNotification();
-    const {display: displayModalDialog, show: showModalDialog, hide: hideModalDialog} = useModalDialog();
-
-
-    const formSubmitHandler = (waiter: Waiter) => {
-        hideModalDialog();
-        const result: Promise<WaiterSuccessOrError> = waiter.id ? editWaiter(waiter) : createWaiter(waiter);
-        result.then(showNotification).catch(showNotification);
+    const addBtnOnClickHandler = () => {
+        dispatch(addWaiterAction());
     }
 
-    const createWaiterHandler = () => {
-        showModalDialog();
-    }
-
-    const editWaiterHandler = (waiter: Waiter): void => {
-        setEditableWaiter(waiter)
-        showModalDialog();
-    };
-
-    const deleteWaiterHandler = async (waiterId: number) => {
-        deleteWaiter(waiterId).then(showNotification).catch(showNotification);
-    };
-
-    const getTitle = () => editableWaiter && editableWaiter.id ? `Edit waiter ${editableWaiter.firstName}` : `Create waiter`;
+    const closeWaiterForm = () => dispatch(closeWaiterFormAction());
 
     return (
         <Container>
@@ -62,27 +31,26 @@ const WaitersPage = ({config}: WaitersPageProps) => {
             </Row>
             <Row>
                 <Col className="d-flex justify-content-end">
-                    <ButtonWithTooltip variant='success' message={`Add waiter`} onClick={createWaiterHandler}>
+                    <ButtonWithTooltip variant='success' message={`Add waiter`} onClick={addBtnOnClickHandler}>
                         <PersonAdd size="1.5em"/>
                     </ButtonWithTooltip>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <ModalDialog display={displayModalDialog} hide={hideModalDialog} title={getTitle()}>
-                        <WaiterForm item={editableWaiter} onSubmit={formSubmitHandler}/>
+                    <ModalDialog display={displayWaiterForm} title={waiterFormTitle} hide={closeWaiterForm}>
+                        <WaiterForm/>
                     </ModalDialog>
                 </Col>
             </Row>
             <Row>
                 <Col className="border-start border-end">
-                    <WaiterList editWaiter={editWaiterHandler} deleteWaiter={deleteWaiterHandler} items={waiters}/>
+                    <WaiterList/>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Notification message={notificationMessage} displaying={displayNotification} hide={hideNotification}
-                                  type={notificationType}/>
+                    <Notification message={notificationMessage} hideAction={hideNotification} type={notificationType}/>
                 </Col>
             </Row>
         </Container>

@@ -3,23 +3,28 @@ import React, {FormEvent, useEffect, useState} from "react";
 import Button from 'react-bootstrap/Button';
 import {Form, InputGroup} from "react-bootstrap";
 import {Person, Telephone} from "react-bootstrap-icons";
-
-export interface WaiterFormProps {
-    item: Waiter | undefined
-    onSubmit: (formData: Waiter) => void
-}
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store";
+import {persist} from "../store/thunk";
 
 interface WaiterFormInputs {
-    firstName: { value: string },
-    phone: { value: string }
+    firstName: {
+        value: string
+    },
+    phone: {
+        value: string
+    }
 }
 
-const WaiterForm = ({item, onSubmit}: WaiterFormProps) => {
+const WaiterForm = () => {
+    const {editableWaiter: waiter} = useSelector((state: RootState) => state.waiters);
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState<Waiter>();
 
     useEffect(() => {
-        setFormData(item);
-    }, [item]);
+        setFormData(waiter);
+    }, [waiter]);
+
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const {firstName, phone} = e.target as typeof e.target & WaiterFormInputs;
@@ -27,7 +32,9 @@ const WaiterForm = ({item, onSubmit}: WaiterFormProps) => {
             return;
         }
 
-        onSubmit({id: item?.id || undefined, firstName: firstName.value, phone: phone.value})
+        const nextWaiter: Waiter = {id: waiter?.id || undefined, firstName: firstName.value, phone: phone.value};
+        // @ts-ignore
+        dispatch(persist(nextWaiter));
     };
     return (
         <Form onSubmit={handleSubmit}>

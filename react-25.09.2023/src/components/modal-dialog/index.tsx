@@ -2,22 +2,20 @@ import React, {PropsWithChildren} from "react";
 import Modal from "react-bootstrap/Modal";
 
 interface ModalDialogProps {
-    display: boolean;
-    hide: () => void;
+    display: boolean
+    hide: () => void
     title: string
 }
 
-const ModalDialog = ({display, hide, title, children}: PropsWithChildren<ModalDialogProps>) => {
-    return (
-        <Modal show={display} onHide={hide}>
-            <Modal.Header closeButton>
-                <Modal.Title title={title}/>
-            </Modal.Header>
-            <Modal.Body>
-                {children}
-            </Modal.Body>
-        </Modal>
-    )
-}
+const ModalDialog = ({display, hide, title, children}: PropsWithChildren<ModalDialogProps>) => (
+    <Modal show={display} onHide={hide}>
+        <Modal.Header closeButton>
+            <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {children}
+        </Modal.Body>
+    </Modal>
+);
 
 export default ModalDialog;

@@ -8,9 +8,15 @@ export interface WaitersBackendConfig {
     url: string
 }
 
+
 export interface WaitersPageConfig {
     backend: WaitersBackendConfig
+    logger: {
+        reduxLogEnable: boolean
+    }
 }
+
+
 
 
 export type WaiterSuccessOrError = Waiter | unknown | null;
