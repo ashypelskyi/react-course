@@ -4,7 +4,7 @@ import React from "react";
 import {Variant} from "react-bootstrap/types";
 import _ from "lodash";
 import {useDispatch} from "react-redux";
-import {ReduxAction} from "../../types";
+import {ReduxAction} from "../types";
 
 export interface NotificationProps {
     message?: string

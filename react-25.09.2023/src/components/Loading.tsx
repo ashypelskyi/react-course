@@ -1,8 +1,17 @@
 import React from "react";
 
-const Loading = () => (
+
+export enum LoadingSize {
+    LARGE = "spinner-border", SMALL = "spinner-border spinner-border-sm"
+}
+
+interface LoadingProps {
+    size?: LoadingSize
+}
+
+const Loading = ({size = LoadingSize.LARGE}: LoadingProps) => (
     <div className="d-flex justify-content-center">
-        <div className="spinner-border" role="status">
+        <div className={size} role="status">
             <span className="visually-hidden">Loading...</span>
         </div>
     </div>

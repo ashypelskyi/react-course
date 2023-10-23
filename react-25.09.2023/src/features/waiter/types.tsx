@@ -1,7 +1,7 @@
 export interface Waiter {
     id?: number,
     firstName: string,
-    phone: string
+    phone: string,
 }
 
 export interface WaitersBackendConfig {
@@ -15,8 +15,3 @@ export interface WaitersPageConfig {
         reduxLogEnable: boolean
     }
 }
-
-
-
-
-export type WaiterSuccessOrError = Waiter | unknown | null;

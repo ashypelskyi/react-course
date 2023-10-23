@@ -5,7 +5,8 @@ import {Form, InputGroup} from "react-bootstrap";
 import {Person, Telephone} from "react-bootstrap-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store";
-import {persist} from "../store/thunk";
+import {persist} from "../store/thunks";
+import {closeWaiterFormAction} from "../store/reducer";
 
 interface WaiterFormInputs {
     firstName: {
@@ -32,7 +33,13 @@ const WaiterForm = () => {
             return;
         }
 
-        const nextWaiter: Waiter = {id: waiter?.id || undefined, firstName: firstName.value, phone: phone.value};
+        const nextWaiter: Waiter = {
+            id: waiter?.id || undefined,
+            firstName: firstName.value,
+            phone: phone.value
+        };
+        // @ts-ignore
+        dispatch(closeWaiterFormAction());
         // @ts-ignore
         dispatch(persist(nextWaiter));
     };

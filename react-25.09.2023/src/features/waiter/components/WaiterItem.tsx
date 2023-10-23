@@ -1,35 +1,33 @@
 import React from "react";
 import {Waiter} from '../types';
-import {Gear, Trash} from "react-bootstrap-icons";
-import ButtonWithTooltip from "../../../components/ButtonWithTooltip";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "../../../store";
-import {remove} from "../store/thunk";
-import {editWaiterAction} from "../store/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../../store";
+import {remove} from "../store/thunks";
+import {editWaiterAction} from "../store/reducer";
+import WaiterActionButtons from "./WaiterActionButtons";
 
 export interface WaiterItemProps {
     waiter: Waiter
 }
 
 const WaiterItem = ({waiter}: WaiterItemProps) => {
+    const {processingLoading, deletableWaiterId, editableWaiter} = useSelector((state: RootState) => state.waiters);
     const dispatch = useDispatch<AppDispatch>();
-
-    const editBtmTooltipMessage = `Edit waiter: ${waiter.firstName}`;
-    const deleteBtnTooltipMessage = `Delete waiter: ${waiter.firstName}`;
 
     const editWaiter = () => {
         // @ts-ignore
         dispatch(editWaiterAction(waiter));
     }
 
-    const deleteBtnOnClickHandler = () => {
+    const deleteBtnOnClickHandler = async () => {
         const waiterId = waiter.id;
         if (waiterId) {
             // @ts-ignore
-            dispatch(remove(waiterId));
-        } else {
-            throw new Error(`Waiter id is null or undefined`);
+            await dispatch(remove(waiterId));
+            return;
         }
+
+        throw new Error(`Waiter id is null or undefined`);
     }
 
     return (
@@ -38,15 +36,11 @@ const WaiterItem = ({waiter}: WaiterItemProps) => {
             <td>{waiter.firstName}</td>
             <td>{waiter.phone}</td>
             <td>
-                <div className="btn-group" role="group" aria-label="Waiter actions">
-                    <ButtonWithTooltip onClick={editWaiter} variant='info' message={editBtmTooltipMessage}>
-                        <Gear/>
-                    </ButtonWithTooltip>
-                    <ButtonWithTooltip onClick={deleteBtnOnClickHandler} variant='danger'
-                                       message={deleteBtnTooltipMessage}>
-                        <Trash/>
-                    </ButtonWithTooltip>
-                </div>
+                <WaiterActionButtons waiter={waiter}
+                                     editBtnLoading={processingLoading && editableWaiter?.id === waiter.id}
+                                     editBtnOnClick={editWaiter}
+                                     deleteBtnLoading={processingLoading && waiter.id === deletableWaiterId}
+                                     deleteBtnOnClick={deleteBtnOnClickHandler}/>
             </td>
         </tr>
     );

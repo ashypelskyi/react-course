@@ -1,14 +1,13 @@
 import React, {useEffect} from "react";
 import WaiterItem from "./WaiterItem";
-import {Waiter as WaiterType} from '../types';
 import Table from 'react-bootstrap/Table';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store";
-import {fetchAll} from "../store/thunk";
+import {fetchAll} from "../store/thunks";
 import Loading from "../../../components/Loading";
 
 const WaiterList = () => {
-    const {list: waiters, loading} = useSelector((state: RootState) => state.waiters);
+    const {list: waiters, fetchAllLoading} = useSelector((state: RootState) => state.waiters);
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -18,7 +17,7 @@ const WaiterList = () => {
 
     return (
         <>
-            {loading ?
+            {fetchAllLoading ?
                 <Loading/> :
                 <Table className="table text-center">
                     <thead>
@@ -31,7 +30,7 @@ const WaiterList = () => {
                     </thead>
                     <tbody>
                     {
-                        waiters.map((waiter: WaiterType) => (
+                        waiters.map(waiter => (
                             <WaiterItem waiter={waiter} key={waiter.id}/>))
                     }
                     </tbody>
