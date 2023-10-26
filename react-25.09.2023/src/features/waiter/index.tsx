@@ -11,8 +11,13 @@ import {AppDispatch, RootState} from "../../store";
 import {addWaiterAction, closeWaiterFormAction, hideNotification} from "./store/reducer";
 import ModalDialog from "../../components/ModalDialog";
 import WaiterForm from "./components/WaiterForm";
+import {useSearchParams} from "react-router-dom";
+import TextInputFilter from "../filter/components/TextInputFilter";
+import Filters from "../filter";
+import FilterItem from "../filter/components/FilterItem";
 
 const WaitersPage = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const {
         displayWaiterForm,
         waiterFormTitle,
@@ -26,6 +31,18 @@ const WaitersPage = () => {
 
     const addBtnLoading = editableWaiter === undefined && deletableWaiterId === undefined && processingLoading;
 
+    const updateNameSearchParams = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        searchParams.set('firstName', e.target.value)
+        setSearchParams(searchParams);
+    };
+
+    const updatePhoneSearchParams = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        searchParams.set('phone', e.target.value)
+        setSearchParams(searchParams);
+    };
+
     return (
         <Container>
             <Row>
@@ -34,7 +51,25 @@ const WaitersPage = () => {
                 </Col>
             </Row>
             <Row>
-                <Col className="d-flex justify-content-end">
+                <Col className={'gy-3'}>
+                    <Filters defaultActiveKey={'main'}>
+                        <FilterItem eventKey={'main'} title="Filters: ">
+                            <TextInputFilter
+                                id="filter-first-name"
+                                name="First Name"
+                                value={searchParams.get("firstName")}
+                                onChange={updateNameSearchParams}/>
+                            <TextInputFilter
+                                id="filter-phone"
+                                name="Phone"
+                                value={searchParams.get("phone")}
+                                onChange={updatePhoneSearchParams}/>
+                        </FilterItem>
+                    </Filters>
+                </Col>
+            </Row>
+            <Row>
+                <Col className="d-flex justify-content-end  gy-5">
                     <ButtonWithTooltip loading={addBtnLoading} variant='success'
                                        message={`Add waiter`} onClick={() => dispatch(addWaiterAction())}>
                         <PersonAdd size="1.5em"/>
