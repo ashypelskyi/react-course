@@ -1,0 +1,20 @@
+ [
+    {
+      "key": "1",
+      "name": "Home",
+      "path": "/",
+      "component": "Home"
+    },
+    {
+      "key": "2",
+      "name": "Waiters",
+      "path": "waiters",
+      "component": "WaitersPage"
+    },
+    {
+      "key": "3",
+      "name": "About",
+      "path": "about",
+      "component": "About"
+    }
+  ]
