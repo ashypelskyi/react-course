@@ -1,15 +1,14 @@
-import Container from "react-bootstrap/Container";
-import React from "react";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
+import React, {useEffect} from "react";
 
-const Index = () => (
-    <Container>
-        <Row>
-            <Col className="text-center gy-3">
-                <h1>404 Page not found</h1>
-            </Col>
-        </Row>
-    </Container>
-);
-export default Index;
+interface NotFoundProps {
+    setTitle: (title: string) => void;
+}
+
+const NotFound = ({setTitle}: NotFoundProps) => {
+    useEffect(() => {
+        setTitle("404 Page not found");
+    }, [setTitle]);
+
+    return (<></>);
+}
+export default NotFound;

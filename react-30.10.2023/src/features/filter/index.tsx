@@ -1,14 +1,22 @@
 import React, {PropsWithChildren} from "react";
-import {Tabs} from "react-bootstrap";
+import {Tab} from "@mui/material";
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
 
 interface FiltersProps {
-    defaultActiveKey: string
+    sections: { label: string, value: string }[]
 }
 
-const Filters = ({defaultActiveKey, children}: PropsWithChildren<FiltersProps>) => (
-    <Tabs className="mb-3" defaultActiveKey={defaultActiveKey}>
+const Filters = ({sections, children}: PropsWithChildren<FiltersProps>) => (
+    <TabContext value="1">
+        <TabList>
+            {
+                sections.map(section => (
+                    <Tab key={section.label} color="primary" label={section.label} value={section.value}/>))
+            }
+        </TabList>
         {children}
-    </Tabs>
+    </TabContext>
 );
 
 export default Filters;

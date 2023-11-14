@@ -1,6 +1,6 @@
 import {Waiter} from "../types";
-import {Variant} from "react-bootstrap/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AlertColor} from "@mui/material/Alert/Alert";
 
 export interface WaitersState {
     list: Waiter[],
@@ -11,7 +11,7 @@ export interface WaitersState {
     waiterFormTitle: string,
     displayWaiterForm: boolean,
     notificationMessage?: string,
-    notificationType: Variant
+    notificationType: AlertColor
 }
 
 const INIT_STATE: WaitersState = {
@@ -23,13 +23,13 @@ const INIT_STATE: WaitersState = {
     waiterFormTitle: "Undefined",
     displayWaiterForm: false,
     notificationMessage: undefined,
-    notificationType: 'light'
+    notificationType: 'info'
 };
 
 const getWaiterFormTitle = (waiter?: Waiter) => waiter && waiter.id ? `Edit waiter ${waiter.firstName}` : `Create waiter`;
 const errorNotification = (state: WaitersState, error: Error, msg?: string) => {
     state.notificationMessage = msg ? `${msg}: ${error.message}` : error.message;
-    state.notificationType = 'danger';
+    state.notificationType = 'error';
 };
 const successNotification = (state: WaitersState, msg: string = 'Successful') => {
     state.notificationMessage = msg;

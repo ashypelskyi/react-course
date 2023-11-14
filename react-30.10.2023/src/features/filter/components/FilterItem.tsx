@@ -1,15 +1,14 @@
-import {Tab} from "react-bootstrap";
 import React, {PropsWithChildren} from "react";
+import TabPanel from "@mui/lab/TabPanel";
 
 interface FilterItemProps {
-    eventKey: string,
-    title: string
+    section: string
 }
 
-const FilterItem = ({eventKey, title, children}: PropsWithChildren<FilterItemProps>) => (
-    <Tab eventKey={eventKey} title={title}>
+const FilterItem = ({section, children}: PropsWithChildren<FilterItemProps>) => (
+    <TabPanel value={section} sx={{paddingBottom: '5px', paddingTop: '5px'}}>
         {children}
-    </Tab>
+    </TabPanel>
 );
 
 export default FilterItem;

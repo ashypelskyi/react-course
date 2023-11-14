@@ -1,16 +1,14 @@
-import React from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
+import React, {useEffect} from "react";
 
-const About = () => (
-    <Container>
-        <Row>
-            <Col className="text-center gy-3">
-                <h1>Very interesting contact info</h1>
-            </Col>
-        </Row>
-    </Container>
-);
+interface AboutPageProps {
+    setTitle: (title: string) => void;
+}
+
+const About = ({setTitle}: AboutPageProps) => {
+    useEffect(() => {
+        setTitle("Very interesting contact info");
+    }, [setTitle]);
+    return (<></>);
+}
 
 export default About;

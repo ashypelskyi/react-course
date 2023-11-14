@@ -1,20 +1,12 @@
 import {Waiter} from "../types";
-import React, {FormEvent, useEffect, useState} from "react";
-import Button from 'react-bootstrap/Button';
-import {Form, InputGroup} from "react-bootstrap";
-import {Person, Telephone} from "react-bootstrap-icons";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store";
 import {closeWaiterFormAction, persistWaiterAction} from "../store/reducer";
-
-interface WaiterFormInputs {
-    firstName: {
-        value: string
-    },
-    phone: {
-        value: string
-    }
-}
+import TextField from "@mui/material/TextField";
+import {useFormik} from 'formik';
+import {object, string} from 'yup';
+import {Button, Grid} from "@mui/material";
 
 const WaiterForm = () => {
     const {editableWaiter: waiter} = useSelector((state: RootState) => state.waiters);
@@ -25,52 +17,73 @@ const WaiterForm = () => {
         setFormData(waiter);
     }, [waiter]);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const {firstName, phone} = e.target as typeof e.target & WaiterFormInputs;
-        if (!firstName || !phone) {
-            return;
-        }
+    const validationSchema = object({
+        firstName: string().required('First name is required'),
+        phone: string()
+            .min(11, 'Password should be of minimum 8 characters length')
+            .required('Password is required'),
+    });
 
-        const nextWaiter: Waiter = {
-            id: waiter?.id || undefined,
-            firstName: firstName.value,
-            phone: phone.value
-        };
+    const formik = useFormik({
+        initialValues: {
+            firstName: waiter?.firstName || "",
+            phone: waiter?.phone || ""
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            const {firstName, phone} = values;
+            if (!firstName || !phone) {
+                return;
+            }
 
-        dispatch(closeWaiterFormAction());
-        dispatch(persistWaiterAction(nextWaiter));
-    };
+            const nextWaiter: Waiter = {
+                id: waiter?.id || undefined,
+                firstName: firstName,
+                phone: phone
+            };
+
+            dispatch(closeWaiterFormAction());
+            dispatch(persistWaiterAction(nextWaiter));
+        },
+    });
+
     return (
-        <Form onSubmit={handleSubmit}>
-            <InputGroup className="mb-3">
-                <InputGroup.Text>
-                    <Person/>
-                </InputGroup.Text>
-                <Form.Control
-                    id='firstName'
-                    required={true}
-                    placeholder="First name" aria-label="First name"
-                    aria-describedby="Waiter first name"
-                    defaultValue={formData?.firstName || ""}
-                />
-            </InputGroup>
-
-            <InputGroup className="mb-3">
-                <InputGroup.Text>
-                    <Telephone/>
-                </InputGroup.Text>
-                <Form.Control
-                    id="phone"
-                    required={true}
-                    placeholder="Phone xxx-xx-xx" aria-label="Phone"
-                    aria-describedby="Waiter phone"
-                    defaultValue={formData?.phone || ""}
-                />
-            </InputGroup>
-
-            <Button variant="primary" type="submit">Save</Button>
-        </Form>
+        <form onSubmit={formik.handleSubmit} style={{width: '100%'}}>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        id="first-name"
+                        name="firstName"
+                        label="First name"
+                        value={formik.values.firstName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                        helperText={formik.touched.firstName && formik.errors.firstName}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        id="phone"
+                        name="phone"
+                        label="Phone"
+                        type="tel"
+                        value={formik.values.phone}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.phone && Boolean(formik.errors.phone)}
+                        helperText={formik.touched.phone && formik.errors.phone}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Button color="primary" variant="contained" fullWidth type="submit">
+                       Save
+                    </Button>
+                </Grid>
+            </Grid>
+        </form>
     )
 }
 

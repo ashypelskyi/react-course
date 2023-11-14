@@ -1,20 +1,15 @@
 import React from "react";
-
-
-export enum LoadingSize {
-    LARGE = "spinner-border", SMALL = "spinner-border spinner-border-sm"
-}
+import {Box, CircularProgress} from "@mui/material";
 
 interface LoadingProps {
-    size?: LoadingSize
+    size?: number
 }
 
-const Loading = ({size = LoadingSize.LARGE}: LoadingProps) => (
-    <div className="d-flex justify-content-center">
-        <div className={size} role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
-    </div>
+const Loading = ({size = 40}: LoadingProps) => (
+    <Box sx={{display: 'flex', justifyContent: 'center', alignContent: 'center'}}>
+        <CircularProgress size={size}/> <span style={{marginLeft: '3px'}}>Loading...</span>
+    </Box>
+
 );
 
 export default Loading;
