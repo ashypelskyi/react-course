@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store";
 import {deleteWaiterAction, openWaiterFormAction} from "../store/reducer";
 import WaiterActionButtons from "./WaiterActionButtons";
+import {TableCell, TableRow} from "@mui/material";
 
 export interface WaiterItemProps {
     waiter: Waiter
@@ -28,18 +29,18 @@ const WaiterItem = ({waiter}: WaiterItemProps) => {
     }
 
     return (
-        <tr>
-            <th scope="row">{waiter.id}</th>
-            <td>{waiter.firstName}</td>
-            <td>{waiter.phone}</td>
-            <td>
+        <TableRow sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+            <TableCell align={"center"} component="th" scope="row">{waiter.id}</TableCell>
+            <TableCell align={"center"}>{waiter.firstName}</TableCell>
+            <TableCell align={"center"}>{waiter.phone}</TableCell>
+            <TableCell align={"center"}>
                 <WaiterActionButtons waiter={waiter}
                                      editBtnLoading={processingLoading && editableWaiter?.id === waiter.id}
                                      editBtnOnClick={editWaiter}
                                      deleteBtnLoading={processingLoading && waiter.id === deletableWaiterId}
                                      deleteBtnOnClick={deleteBtnOnClickHandler}/>
-            </td>
-        </tr>
+            </TableCell>
+        </TableRow>
     );
 }
 

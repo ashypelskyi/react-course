@@ -1,7 +1,9 @@
 import ButtonWithTooltip from "../../../components/ButtonWithTooltip";
-import {Gear, Trash} from "react-bootstrap-icons";
 import React from "react";
 import {Waiter} from "../types";
+import SettingsIcon from '@mui/icons-material/Settings';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import {ButtonGroup} from "@mui/material";
 
 interface WaiterActionButtonsProps {
     editBtnLoading: boolean,
@@ -12,22 +14,28 @@ interface WaiterActionButtonsProps {
 
 }
 
-const WaiterActionButtons = ({waiter, editBtnLoading, deleteBtnLoading, editBtnOnClick, deleteBtnOnClick}: WaiterActionButtonsProps) => {
+const WaiterActionButtons = ({
+                                 waiter,
+                                 editBtnLoading,
+                                 deleteBtnLoading,
+                                 editBtnOnClick,
+                                 deleteBtnOnClick
+                             }: WaiterActionButtonsProps) => {
     const firstName = waiter.firstName;
     const editBtmTooltipMessage = `Edit waiter: ${firstName}`;
     const deleteBtnTooltipMessage = `Delete waiter: ${firstName}`;
 
     return (
-        <div className="btn-group" role="group" aria-label="Waiter actions">
-            <ButtonWithTooltip loading={editBtnLoading} onClick={editBtnOnClick} variant='info'
+        <ButtonGroup variant="text" aria-label="outlined primary button group">
+            <ButtonWithTooltip loading={editBtnLoading} onClick={editBtnOnClick} color={'info'}
                                message={editBtmTooltipMessage}>
-                <Gear/>
+                <SettingsIcon/>
             </ButtonWithTooltip>
-            <ButtonWithTooltip loading={deleteBtnLoading} onClick={deleteBtnOnClick} variant='danger'
+            <ButtonWithTooltip loading={deleteBtnLoading} onClick={deleteBtnOnClick} color={'error'}
                                message={deleteBtnTooltipMessage}>
-                <Trash/>
+                <RemoveCircleIcon/>
             </ButtonWithTooltip>
-        </div>
+        </ButtonGroup>
     )
 }
 

@@ -1,15 +1,13 @@
-import React from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
+import React, {useEffect} from "react";
 
-const MainPage = () => (
-    <Container>
-        <Row>
-            <Col className="text-center gy-3">
-                <h1>Your advertisement could be here</h1>
-            </Col>
-        </Row>
-    </Container>
-);
+interface MainPageProps {
+    setTitle: (title: string) => void;
+}
+
+const MainPage = ({setTitle}: MainPageProps) => {
+    useEffect(() => {
+        setTitle("Your advertisement could be here");
+    }, [setTitle]);
+    return (<></>);
+}
 export default MainPage;

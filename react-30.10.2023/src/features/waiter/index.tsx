@@ -1,11 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import WaiterList from './components/WaiterList';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import ButtonWithTooltip from "../../components/ButtonWithTooltip";
 import Notification from "../../components/Notification";
-import {PersonAdd} from "react-bootstrap-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store";
 import {closeWaiterFormAction, hideNotification, openWaiterFormAction} from "./store/reducer";
@@ -15,8 +11,14 @@ import {useSearchParams} from "react-router-dom";
 import TextInputFilter from "../filter/components/TextInputFilter";
 import Filters from "../filter";
 import FilterItem from "../filter/components/FilterItem";
+import {Box, Container, Divider, Stack} from "@mui/material";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-const WaitersPage = () => {
+interface WaitersPageProps {
+    setTitle: (title: string) => void;
+}
+
+const WaitersPage = ({setTitle}: WaitersPageProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const {
         displayWaiterForm,
@@ -28,6 +30,10 @@ const WaitersPage = () => {
         deletableWaiterId
     } = useSelector((state: RootState) => state.waiters);
     const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        setTitle("Waiters management");
+    }, [setTitle]);
 
     const addBtnLoading = editableWaiter === undefined && deletableWaiterId === undefined && processingLoading;
 
@@ -44,57 +50,44 @@ const WaitersPage = () => {
     };
 
     return (
-        <Container>
-            <Row>
-                <Col className="text-center gy-3">
-                    <h1>Waiters management</h1>
-                </Col>
-            </Row>
-            <Row>
-                <Col className={'gy-3'}>
-                    <Filters defaultActiveKey={'main'}>
-                        <FilterItem eventKey={'main'} title="Filters: ">
+        <Box sx={{marginTop: "25px"}}>
+            <Container maxWidth="xl">
+                <Stack spacing={2} useFlexGap>
+                    <Filters sections={[{label: "Filters", value: "1"}]}>
+                        <FilterItem section={"1"}>
                             <TextInputFilter
                                 id="filter-first-name"
                                 name="First Name"
                                 value={searchParams.get("firstName")}
                                 onChange={updateNameSearchParams}/>
-                            <TextInputFilter
-                                id="filter-phone"
-                                name="Phone"
-                                value={searchParams.get("phone")}
-                                onChange={updatePhoneSearchParams}/>
+                        </FilterItem>
+                        <FilterItem section={"1"}>
+                        <TextInputFilter
+                            id="filter-phone"
+                            name="Phone"
+                            value={searchParams.get("phone")}
+                            onChange={updatePhoneSearchParams}/>
                         </FilterItem>
                     </Filters>
-                </Col>
-            </Row>
-            <Row>
-                <Col className="d-flex justify-content-end  gy-5">
-                    <ButtonWithTooltip loading={addBtnLoading} variant='success'
-                                       message={`Add waiter`} onClick={() => dispatch(openWaiterFormAction())}>
-                        <PersonAdd size="1.5em"/>
-                    </ButtonWithTooltip>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
+                    <Divider variant="fullWidth"/>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <ButtonWithTooltip loading={addBtnLoading} color={'success'}
+                                           message={`Add waiter`} onClick={() => dispatch(openWaiterFormAction())}>
+                            <PersonAddIcon fontSize="large"/>
+                        </ButtonWithTooltip>
+                    </Box>
                     <ModalDialog display={displayWaiterForm} title={waiterFormTitle}
                                  hide={() => dispatch(closeWaiterFormAction())}>
                         <WaiterForm/>
                     </ModalDialog>
-                </Col>
-            </Row>
-            <Row>
-                <Col className="border-start border-end">
+
                     <WaiterList/>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
+
                     <Notification message={notificationMessage} hideAction={hideNotification} type={notificationType}/>
-                </Col>
-            </Row>
-        </Container>
+
+                </Stack>
+            </Container>
+        </Box>
     )
 };
 

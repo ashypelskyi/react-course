@@ -1,25 +1,31 @@
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import React, {PropsWithChildren} from "react";
-import {ButtonVariant} from "react-bootstrap/types";
-import Loading, {LoadingSize} from "./Loading";
+import Loading from "./Loading";
+import {IconButton, Tooltip} from "@mui/material";
+import {OverridableStringUnion} from "@mui/types";
+import {IconButtonPropsColorOverrides} from "@mui/material/IconButton/IconButton";
 
 interface ButtonWithTooltipProps {
     onClick: () => void,
-    variant?: ButtonVariant,
+    color?: OverridableStringUnion<'inherit' | 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning', IconButtonPropsColorOverrides>
     message: string,
     loading: boolean
 }
 
-const ButtonWithTooltip = ({onClick, children, variant, message, loading}: PropsWithChildren<ButtonWithTooltipProps>) => (
-    <OverlayTrigger placement="bottom" overlay={<Tooltip>{message}</Tooltip>}>
-        <Button disabled={loading} variant={variant} onClick={onClick}>
+const ButtonWithTooltip = ({
+                               onClick,
+                               children,
+                               color,
+                               message,
+                               loading
+                           }: PropsWithChildren<ButtonWithTooltipProps>) => (
+    <Tooltip title={message}>
+        <IconButton disabled={loading} onClick={onClick} color={color}>
             {loading ?
-                <Loading size={LoadingSize.SMALL}/> :
+                <Loading size={20}/> :
                 children
             }
-        </Button>
-    </OverlayTrigger>
+        </IconButton>
+    </Tooltip>
 );
 
 export default ButtonWithTooltip;

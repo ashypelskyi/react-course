@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from "react";
-import Modal from "react-bootstrap/Modal";
+import {Dialog, DialogContent, DialogTitle} from "@mui/material";
 
 interface ModalDialogProps {
     display: boolean
@@ -8,14 +8,12 @@ interface ModalDialogProps {
 }
 
 const ModalDialog = ({display, hide, title, children}: PropsWithChildren<ModalDialogProps>) => (
-    <Modal show={display} onHide={hide}>
-        <Modal.Header closeButton>
-            <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+    <Dialog open={display} onClose={hide} fullWidth={true}>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent dividers={true}>
             {children}
-        </Modal.Body>
-    </Modal>
+        </DialogContent>
+    </Dialog>
 );
 
 export default ModalDialog;
